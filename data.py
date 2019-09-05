@@ -21,12 +21,9 @@ def get_driver_value(driver_id):
     value = 0
     count = 0
     for index, row in df.iterrows():
+        count += 1
         curr = (row['ride_distance'] / 5280) * 1.15 + (row['ride_duration'] / 60) * .22 + 3.75
         curr += (curr * (row['ride_prime_time'] / 100))
-
-        if curr < 5 or curr > 400:
-            count += 1
-
         curr = max(curr, 5)
         curr = min(curr, 400)
         value += curr
@@ -34,14 +31,22 @@ def get_driver_value(driver_id):
 
 def get_all_driver_values():
     df = pd.DataFrame(driver_id_df['driver_id'].copy())
-    l = []
-    t = 0
+    values = []
+    number_of_rides = []
+    average = []
+
     for index, row in df.iterrows():
         value, count = get_driver_value(row['driver_id'])
-        l.append(value)
-        t += count
-    print("Rides Under/Over 5/400: " + str(t) + "    Total: 193503    " + " Percent: "  + str(t / 193503))
-    df['driver_value'] = l
+        values.append(value)
+        number_of_rides.append(count)
+        if count == 0:
+            average.append(0)
+        else:
+            average.append(round(value / count, 2))
+
+    df['driver_value'] = values
+    df['ride_count'] = number_of_rides
+    df['average_value_per_ride'] = average
     df.to_csv('driver_values.csv')
     return df
 
