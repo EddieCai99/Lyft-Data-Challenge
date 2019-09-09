@@ -49,7 +49,7 @@ def get_ride_times(driver_id):
         ride_date = requested_date_time[-2]
         time = requested_date_time[-1]
         try:
-            list_of_times[4] = max(list_of_times[4], get_date_difference(ride_date, date.today().strftime("%Y-%m-%d")))
+            list_of_times[5] = max(list_of_times[5], get_date_difference(ride_date, date.today().strftime("%Y-%m-%d")))
         except:
             print("Error: " + driver_id)
             print("Curr Ride: " + curr_ride)
@@ -64,7 +64,7 @@ def get_ride_times(driver_id):
 
     return list_of_times
 
-#print(get_ride_times('021e5cd15ef0bb3ec20a12af99e142b3'))
+print(get_ride_times('021e5cd15ef0bb3ec20a12af99e142b3'))
 
 # calculates the revenue generated for the given driver id
 # returns the value (profit made) and the number of rides
@@ -109,8 +109,8 @@ def get_all_driver_values(df):
         fifth.append(list_of_times[4])
         oldest_ride.append(list_of_times[5])
 
-        if (index % 5 == 0):
-            print(str(round(index / len(df.index), 2)) + "%")
+        if (index + 1 % 5 == 0):
+            print(str(round(index + 1/ len(df.index) * 100, 2)) + "%")
 
     df['driver_value'] = values
     df['ride_count'] = number_of_rides
@@ -122,10 +122,13 @@ def get_all_driver_values(df):
     df['19-24'] = fifth
     df['oldest_ride'] = oldest_ride
 
+    print("100.0%")
+
 # constructs csv
 def create_csv():
-    df = pd.DataFrame(driver_id_df['driver_id'].copy())
+    df = pd.DataFrame(driver_id_df['driver_id'].copy())[:10]
+    print(df)
     get_all_driver_values(df)
-    df.to_csv('driver_values.csv')
+    df.to_csv('driver_profiles.csv')
 
 create_csv()
