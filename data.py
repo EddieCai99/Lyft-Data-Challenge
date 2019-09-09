@@ -1,6 +1,7 @@
 import numpy
 import pandas as pd
 import datetime
+import time
 from datetime import date
 
 driver_id_df = pd.read_csv("driver_ids.csv")
@@ -27,7 +28,7 @@ def get_date_difference(first, second):
 
 # return int representing when the ride was requested at
 def get_time_zone(hour):
-    if hour >= 0 and hour <= 6:
+    if hour > 0 and hour <= 6:
         return 0
     elif hour > 6 and hour <= 10:
         return 1
@@ -64,8 +65,6 @@ def get_ride_times(driver_id):
 
     return list_of_times
 
-print(get_ride_times('021e5cd15ef0bb3ec20a12af99e142b3'))
-
 # calculates the revenue generated for the given driver id
 # returns the value (profit made) and the number of rides
 def get_driver_value(driver_id):
@@ -83,6 +82,8 @@ def get_driver_value(driver_id):
 
 # adds driver values, number of rides and average value per ride given to table
 def get_all_driver_values(df):
+    start_time = time.time()
+
     values = []
     number_of_rides = []
     average = []
@@ -92,6 +93,7 @@ def get_all_driver_values(df):
     fourth = []
     fifth = []
     oldest_ride = []
+
     for index, row in df.iterrows():
         value, count = get_driver_value(row['driver_id'])
         values.append(value)
@@ -115,19 +117,18 @@ def get_all_driver_values(df):
     df['driver_value'] = values
     df['ride_count'] = number_of_rides
     df['average_value_per_ride'] = average
-    df['0-6'] = first
-    df['6-10'] = second
-    df['10-14'] = third
-    df['14-19'] = fourth
-    df['19-24'] = fifth
+    df['12:01 AM - 6 AM'] = first
+    df['6:01 AM - 10 AM'] = second
+    df['10:01 AM - 2 PM'] = third
+    df['2:01 PM - 7 PM'] = fourth
+    df['7:01 PM - 12 AM'] = fifth
     df['oldest_ride'] = oldest_ride
 
-    print("100.0%")
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 # constructs csv
 def create_csv():
     df = pd.DataFrame(driver_id_df['driver_id'].copy())[:10]
-    print(df)
     get_all_driver_values(df)
     df.to_csv('driver_profiles.csv')
 
