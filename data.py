@@ -54,7 +54,6 @@ def get_ride_times(driver_id):
             print("Error: " + driver_id)
             print("Curr Ride: " + curr_ride)
             print("Requested At: " + requested_at)
-            print("Requested Date Time: " + requested_date_time + '\n')
 
         try:
             hour = int(time.split(':')[0])
@@ -93,7 +92,6 @@ def get_all_driver_values(df):
     fourth = []
     fifth = []
     oldest_ride = []
-
     for index, row in df.iterrows():
         value, count = get_driver_value(row['driver_id'])
         values.append(value)
@@ -110,6 +108,9 @@ def get_all_driver_values(df):
         fourth.append(list_of_times[3])
         fifth.append(list_of_times[4])
         oldest_ride.append(list_of_times[5])
+
+        if (index % 5 == 0):
+            print(str(round(index / len(df.index), 2)) + "%")
 
     df['driver_value'] = values
     df['ride_count'] = number_of_rides
