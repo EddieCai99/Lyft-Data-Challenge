@@ -4,6 +4,7 @@ import datetime
 import time
 from datetime import date
 
+
 driver_id_df = pd.read_csv("driver_ids.csv")
 ride_id_df = pd.read_csv("ride_ids.csv")
 rides_df = pd.read_csv("ride_timestamps.csv")
@@ -128,7 +129,7 @@ def get_all_driver_values(df):
 
 # constructs csv
 def create_csv():
-    df = pd.DataFrame(driver_id_df['driver_id'].copy())[:10]
+    df = pd.DataFrame(driver_id_df['driver_id'].copy())
     get_all_driver_values(df)
     df.to_csv('driver_profiles.csv')
 
